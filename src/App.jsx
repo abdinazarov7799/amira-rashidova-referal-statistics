@@ -1,12 +1,13 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
 import ReactPaginate from "react-paginate";
+import {useParams} from "react-router-dom";
 
 function App() {
     const [data,setData] = useState({});
-    const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(0);
     const [size, setSize] = useState(100);
+    const {userId} = useParams();
 
     useEffect(() => {
         axios({
@@ -18,10 +19,8 @@ function App() {
             }
         }).then(response => {
             setData(response?.data.data);
-            setLoading(false);
         }).catch(error => {
             console.error('Error fetching data:', error);
-            setLoading(false);
         });
     }, [page, size]);
 
@@ -56,7 +55,7 @@ function App() {
                           </thead>
                           <tbody>
                           {data?.content?.map((item, index) => (
-                              <tr key={index} className="text-white">
+                              <tr key={index} className={`text-white ${userId === item?.chatId ? "bg-emerald-500" : ""}`}>
                                   <td className="px-6 py-4">{index+1}</td>
                                   <td className="px-6 py-4">{item?.name}</td>
                                   <td className="px-6 py-4">{item?.chatId}</td>
